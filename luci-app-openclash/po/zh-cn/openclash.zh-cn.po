@@ -11,7 +11,7 @@ msgstr "一个运行在OpenWrt上的Clash客户端，兼容Shadowsocks、Shadows
 msgid "Global Settings(Will Modify The Config File Or Subscribe According To The Settings On This Page)"
 msgstr "全局设置（将按照本页设置自动修改配置文件和获取订阅）"
 
-msgid "Technical Support"
+msgid "Credits"
 msgstr "技术支持"
 
 msgid "Overviews"
@@ -316,9 +316,8 @@ msgstr "文件上传失败"
 msgid "No specify upload file."
 msgstr "未指定上传文件"
 
-msgid ""
-"Only Support yaml what would be save to /etc/openclash/"
-msgstr "注意：只支持【yaml】后缀的文件，文件将被保存到 /etc/openclash/"
+msgid "Note: Please Upload File According To File Type, File Will Be Saved To The Prompt Path"
+msgstr "注意：请根据文件类型上传文件，文件将会被保存到提示路径"
 
 msgid "Proxy Provider File List"
 msgstr "代理集文件列表"
@@ -533,14 +532,17 @@ msgstr "自定义规则"
 msgid "Custom Clash Rules(Access Control)"
 msgstr "自定义规则(访问控制)"
 
-msgid "Custom Rules Here, For More Go Github:https://github.com/Dreamacro/clash/blob/master/README.md, IP To CIDR: http://ip2cidr.com"
-msgstr "设置自定义规则（顶部），详细信息请前往Github( https://github.com/Dreamacro/clash/blob/master/README.md )查询，在线IP段转CIDR地址：http://ip2cidr.com"
+msgid "Custom Priority Rules Here, For More Go:"
+msgstr "设置自定义规则（优先匹配），详细信息请参阅:"
 
-msgid "Custom Rules 2 Here, For More Go Github:https://github.com/Dreamacro/clash/blob/master/README.md, IP To CIDR: http://ip2cidr.com"
-msgstr "设置自定义规则（底部），详细信息请前往Github( https://github.com/Dreamacro/clash/blob/master/README.md )查询，在线IP段转CIDR地址：http://ip2cidr.com"
+msgid "Custom Extended Rules Here, For More Go:"
+msgstr "设置自定义规则（候补匹配），详细信息请参阅:"
 
-msgid "Custom Hosts Here, For More Go Github:https://github.com/Dreamacro/clash/blob/master/README.md"
-msgstr "设置自定义Hosts，详细信息请前往Github( https://github.com/Dreamacro/clash/blob/master/README.md )查询"
+msgid "IP To CIDR:"
+msgstr "在线IP段转CIDR地址:"
+
+msgid "Custom Hosts Here, For More Go:"
+msgstr "设置自定义Hosts，详细信息请参阅:"
 
 msgid "Set Custom Rules"
 msgstr "设置自定义规则（在上方规则设置中启用本功能后生效）"
@@ -550,9 +552,6 @@ msgstr "设置自定义Hosts，仅在Redir-Host模式下生效（不会覆盖配
 
 msgid "Version Update"
 msgstr "版本更新"
-
-msgid "CPU Model"
-msgstr "处理器架构"
 
 msgid "Model Not Found"
 msgstr "处理器架构识别失败"
@@ -571,12 +570,6 @@ msgstr "查询更新失败"
 
 msgid "<New>"
 msgstr "<可更新>"
-
-msgid "Chose to Download"
-msgstr "*选择内核编译版本"
-
-msgid "Select Based On Your CPU Model For Core Update, Wrong Version Will Not Work"
-msgstr "请根据处理器架构选择以便下载、更新对应内核，错误的版本将不能正常运行"
 
 msgid "Update Core File"
 msgstr "更新内核"
@@ -1213,8 +1206,8 @@ msgstr "确定要一键检查并更新所有内核及插件吗？"
 msgid "Check failed, Please try again later!"
 msgstr "一键检查更新失败,请稍后再试！"
 
-msgid "No compiled version is selected. Please configure it in the General Settings tab!"
-msgstr "未选择编译版本，请到常规设置标签中配置！"
+msgid "No Compiled Version is Selected, Please Select on The Top and Try Again!"
+msgstr "未选择编译版本，请到上方标签选择后重试！"
 
 msgid "Checking..."
 msgstr "正在检查更新..."
@@ -1419,6 +1412,12 @@ msgstr "自定义大陆IP段的更新来源，编辑后点击下方按钮生效"
 
 msgid "(Default)"
 msgstr "(默认)"
+
+msgid "(Default mmdb)"
+msgstr "(默认，全部国家且仅写入iso_code和geoname_id)"
+
+msgid "(All Info mmdb)"
+msgstr "(全部国家且且包含官方全部信息数据)"
 
 msgid "(Only CN)"
 msgstr "(仅中国数据)"
@@ -1971,3 +1970,345 @@ msgstr "下载失败！"
 
 msgid "Download Successful!"
 msgstr "下载成功！"
+
+msgid "Switch To The New Proxy When The Delay Difference Between Old and The Fastest Currently is Greater Than This Value"
+msgstr "仅当旧代理和当前最快代理之间的延迟差大于此值时，才会切换到新代理"
+
+msgid "Url-Test Group Tolerance (ms)"
+msgstr "Url-Test 策略组切换灵敏度（ms）"
+
+msgid "Attention:"
+msgstr "注意事项："
+
+msgid "The game proxy is a test function and does not guarantee the availability of rules"
+msgstr "游戏代理为测试功能，不保证规则可用性"
+
+msgid "Preparation steps:"
+msgstr "准备步骤："
+
+msgid "1. In the <server and policy group management> page, create the policy group and node you are going to use, and apply the configuration (when adding nodes, you must select the policy group you want to join). Policy group type suggestion: fallback, game nodes must support UDP"
+msgstr "1、在《服务器与策略组管理》页面创建您准备使用的策略组和节点，并应用配置（节点添加时必须选择要加入的策略组），策略组类型建议:FallBack，游戏节点必须支持UDP"
+
+msgid "2. Click the <manage third party game rules> or <manage third party rule set> button to enter the rule list and download the rules you want to use"
+msgstr "2、点击《管理第三方游戏规则》或者《管理第三方规则集》按钮进入规则列表下载您要使用的规则"
+
+msgid "3. On this page, set the corresponding configuration file and policy group of the rule you have downloaded, and save the settings"
+msgstr "3、在此页面设置您已下载的规则的对应配置文件、策略组并保存设置"
+
+msgid "Use in normal mode (rules of the game only):"
+msgstr "在普通模式下使用（仅游戏规则）："
+
+msgid "1. Select normal mode in <global settings> - <mode settings> - <running mode> and enable UDP traffic, then restart"
+msgstr "1、在《全局设置》-《模式设置》-《运行模式》中选择普通模式并启用UDP流量代理，然后重新启动"
+
+msgid "Use in tun mode:"
+msgstr "在TUN模式下使用："
+
+msgid "1. In the <global settings> - <version update tab>, download and install the corresponding mode core first"
+msgstr "1、在全局设置-版本更新标签先下载、安装对应模式内核"
+
+msgid "2. Select mixed mode, Tun mode or game mode in <global settings> - <mode settings> - <running mode> and restart"
+msgstr "2、在《全局设置》-《模式设置》-《运行模式》中选择混合模式、TUN模式或者游戏模式并重新启动"
+
+msgid "When setting this page, if the groups is empty, please go to the <server and group management> page to add"
+msgstr "本页设置时如策略组为空，请先到《服务器与策略组管理》页面进行添加"
+
+msgid "Introduction to rule set usage: https://lancellc.gitbook.io/clash/clash-config-file/rule-provider"
+msgstr "规则集使用介绍：https://lancellc.gitbook.io/clash/clash-config-file/rule-provider"
+
+msgid "Subconverter external configuration (subscription conversion template) Description: https://github.com/tindy2013/subconverter#external-configuration-file"
+msgstr "subconverter 外部配置(订阅转换模板)说明：https://github.com/tindy2013/subconverter#external-configuration-file"
+
+msgid "If you need to customize the external configuration file (subscription conversion template), please write it according to the instructions, upload it to the accessible location of the external network, and fill in the address correctly when using it"
+msgstr "如需自定义外部配置文件(订阅转换模板)，请按照说明编写后上传至外部网络可访问的位置，并在使用时正确填写地址"
+
+msgid "If you have a recommended external configuration file (subscription conversion template), you can modify by following The file format of /usr/share/opencrash/res/sub_ini.list and pr"
+msgstr "如您有值得推荐的外部配置文件(订阅转换模板)，可以按照 /usr/share/openclash/res/sub_ini.list 的文件格式修改后提交PR"
+
+msgid "To restore the default configuration, try accessing:"
+msgstr "如遇到配置丢失或者需要还原默认配置，请尝试访问地址:"
+
+msgid "Take Effect If Fallback DNS Setted, Prevent DNS Pollution"
+msgstr "只有在配置文件设置了 Fallback 组的DNS时才会生效，正确设置可以有效防止DNS污染"
+
+msgid "Custom Fallback-Filter"
+msgstr "自定义Fallback-Filter"
+
+msgid "Error: Fallback-Filter Need fallback of DNS Been Setted, Ignore..."
+msgstr "错误：只有在配置文件设置了Fallback组的DNS时Fallback-Filter才会生效，跳过此项修改..."
+
+msgid "Error: Unable To Parse Custom Fallback-Filter File, Ignore..."
+msgstr "错误：读取自定义的Fallback-Filter设置失败，跳过此项修改..."
+
+msgid "Simple & trustworthy"
+msgstr "简单 & 值得信赖"
+
+msgid "Cross-platform Support"
+msgstr "丰富的第三方应用兼容性"
+
+msgid "Global Acceleration Network"
+msgstr "全球网络基础设施"
+
+msgid "Easy to Use"
+msgstr "操作简易"
+
+msgid "Intelligent Shunting"
+msgstr "智能分流"
+
+msgid "Perfect Technical Support"
+msgstr "完善技术支持"
+
+msgid "Plan Expiration Time"
+msgstr "到期时间"
+
+msgid "Account Balances"
+msgstr "账户余额"
+
+msgid "Aff Balances"
+msgstr "返利余额"
+
+msgid "Account Integral"
+msgstr "账户积分"
+
+msgid "Today Used"
+msgstr "今日已用"
+
+msgid "Plan Used"
+msgstr "本月已用"
+
+msgid "Plan Unused"
+msgstr "剩余流量"
+
+msgid "Plan Traffic"
+msgstr "套餐流量"
+
+msgid "Checkin"
+msgstr "试试手气"
+
+msgid "Dler Cloud Account Login Failed! Please Check And Try Again..."
+msgstr "Dler Cloud 账户登录失败！请检查账户信息并重试..."
+
+msgid "Dler Cloud Checkin Failed! Please Check And Try Again..."
+msgstr "Dler Cloud 签到失败，请稍后再试！"
+
+msgid "Account Email Address"
+msgstr "账号地址"
+
+msgid "Account Password"
+msgstr "账号密码"
+
+msgid "Checkin Interval (hour)"
+msgstr "签到间隔（小时）"
+
+msgid "Checkin Multiple"
+msgstr "签到倍数"
+
+msgid "Multiple Must Be a Positive Integer and No More Than 50"
+msgstr "倍数必须是正整数且不大于50"
+
+msgid "Dler Cloud Checkin Successful, Result:"
+msgstr "Dler Cloud 签到成功，结果："
+
+msgid "Dler Cloud Checkin Failed, Result:"
+msgstr "Dler Cloud 签到失败，结果："
+
+msgid "Downloading Rule..."
+msgstr "正在下载规则..."
+
+msgid "Downloading Fail"
+msgstr "下载失败"
+
+msgid "Downloading Successful"
+msgstr "下载成功"
+
+msgid "Rule No Change"
+msgstr "规则没有更新"
+
+msgid "Downloading Timeout"
+msgstr "下载超时"
+
+msgid "Rule Project:"
+msgstr "规则项目:"
+
+msgid "Rule Project:"
+msgstr "规则项目:"
+
+msgid "Login..."
+msgstr "登录中..."
+
+msgid "Dler Cloud Login Successful"
+msgstr "Dler Cloud 登录成功"
+
+msgid "Dler Cloud Login Faild"
+msgstr "Dler Cloud 登录失败"
+
+msgid "Login Account"
+msgstr "登录账号"
+
+msgid "Dler Cloud Logout Successful"
+msgstr "Dler Cloud 已成功退出"
+
+msgid "Dler Cloud Logout Faild"
+msgstr "Dler Cloud 退出失败"
+
+msgid "Logout Account"
+msgstr "退出账号"
+
+msgid "Account Login"
+msgstr "账号登录"
+
+msgid "Account logged in"
+msgstr "账号已登录"
+
+msgid "Account not logged in"
+msgstr "账号未登录"
+
+msgid "Logout..."
+msgstr "退出中..."
+
+msgid "Error Login Info"
+msgstr "登录信息错误"
+
+msgid "Warning: Proxy is no longer used. Auto replaced by proxies"
+msgstr "警告：【Proxy】写法已不再支持，自动替换为proxies"
+
+msgid "Warning: Proxy Group is no longer used. Auto replaced by proxy-groups"
+msgstr "警告：【Proxy Group】写法已不再支持，自动替换为proxy-groups"
+
+msgid "Warning: Rule is no longer used. Auto replaced by rules"
+msgstr "警告：【Rule】写法已不再支持，自动替换为rules"
+
+msgid "Warning: rule-provider is no longer used. Auto replaced by rule-providers"
+msgstr "警告：【rule-provider】写法已不再支持，自动替换为rule-providers"
+
+msgid "Warning: Because of No Rules Field, Stop Setting BT/P2P DIRECT Rules!"
+msgstr "警告：未找到【rules】配置，停止添加BT/P2P直连规则！"
+
+msgid "Error: Load File Error,"
+msgstr "错误：文件解析失败，"
+
+msgid "Error: Set General Error,"
+msgstr "错误：修改General配置失败，"
+
+msgid "Error: Set Hosts Rules Error,"
+msgstr "错误：修改Hosts配置失败，"
+
+msgid "Error: Set Fake-IP-Filter Error,"
+msgstr "错误：修改Fake-IP-Filter配置失败，"
+
+msgid "Error: Set Nameserver-Policy Error,"
+msgstr "错误：修改Nameserver-Policy配置失败，"
+
+msgid "Error: Set Custom Rules Error,"
+msgstr "错误：设置自定义规则失败，"
+
+msgid "Error: Set BT/P2P DIRECT Rules Error,"
+msgstr "错误：设置仅代理命中规则流量（BT/P2P直连）失败，"
+
+msgid "Error: Set 198.18.0.1/16 REJECT Rule Error,"
+msgstr "错误：设置198.18.0.1/16（REJECT）规则失败，"
+
+msgid "Error: Set lhie1 Rules Error,"
+msgstr "错误：设置第三方规则（lhie1）失败，"
+
+msgid "Error: Set ConnersHua Rules Error,"
+msgstr "错误：设置第三方规则（ConnersHua）失败，"
+
+msgid "Error: Set ConnersHua Return Rules Error,"
+msgstr "错误：设置第三方规则（ConnersHua 回国）失败，"
+
+msgid "Error: Filter Proxies Error,"
+msgstr "错误：节点筛选失败，"
+
+msgid "Error: Unable To Parse Config File,"
+msgstr "错误：配置文件解析失败，"
+
+msgid "Error: Unable To Parse Updated Rules File,"
+msgstr "错误：更新的规则文件解析失败，"
+
+msgid "Error: Edit Provider Path Error,"
+msgstr "错误：修改集路径失败，"
+
+msgid "Error: Set Url-Test Group Tolerance Error,"
+msgstr "错误：修改Url-Test策略组容忍值失败，"
+
+msgid "Error: Game Rule Merge Error,"
+msgstr "错误：游戏规则合并失败，"
+
+msgid "Error: Game Proxy Merge Error,"
+msgstr "错误：游戏规则策略组合并失败，"
+
+msgid "Error: Rule Set Add Error,"
+msgstr "错误：规则集Rule-Set规则添加失败，"
+
+msgid "Error: Custom Rule Provider Merge Error,"
+msgstr "错误：规则集Rule Provider合并失败，"
+
+msgid "Error: Restore Backup Rules Error,"
+msgstr "错误：还原默认规则失败，"
+
+msgid "Error: Restore Backup Rules Error,"
+msgstr "错误：还原默认规则失败，"
+
+msgid "Error: Resolve Proxy-provider Error,"
+msgstr "错误：解析代理集失败，"
+
+msgid "Error: Resolve Proxy Error,"
+msgstr "错误：节点解析失败，"
+
+msgid "Error: Resolve Proxy-group Error,"
+msgstr "错误：策略组解析失败，"
+
+msgid "switching succeeded!"
+msgstr "切换成功！"
+
+msgid "switching failed!"
+msgstr "切换失败！"
+
+msgid "Current Config File"
+msgstr "当前配置文件"
+
+msgid "Official Website"
+msgstr "官方网站"
+
+msgid "Up"
+msgstr "上传"
+
+msgid "Up:"
+msgstr "上传:"
+
+msgid "Down:"
+msgstr "下载:"
+
+msgid "Connections:"
+msgstr "活动连接:"
+
+msgid "Ram:"
+msgstr "内存占用:"
+
+msgid "CPU:"
+msgstr "CPU占用:"
+
+msgid "Could not find any connection logs!"
+msgstr "找不到任何连接日志！"
+
+msgid "Some error occurred!"
+msgstr "发生了一些错误！"
+
+msgid "Click to Test"
+msgstr "点击测试"
+
+msgid "Connection Test"
+msgstr "连接测试"
+
+msgid "Backup File"
+msgstr "备份文件"
+
+msgid "Backup File Restore Successful!"
+msgstr "备份文件恢复成功！"
+
+msgid "Backup OpenClash"
+msgstr "备份 OpenClash"
+
+msgid "Not Select"
+msgstr "未选择"

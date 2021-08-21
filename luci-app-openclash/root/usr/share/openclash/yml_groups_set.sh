@@ -253,7 +253,7 @@ servers_if_update=$(uci get openclash.config.servers_if_update 2>/dev/null)
 if_game_group="$1"
 if [ "$create_config" = "0" ] || [ "$servers_if_update" = "1" ] || [ ! -z "$if_game_group" ]; then
    /usr/share/openclash/yml_groups_name_get.sh
-   if [ ! -z "$(grep "读取错误" /tmp/Proxy_Group)"]; then
+   if [ $? -ne 0 ]; then
       LOG_OUT "Error: Config File【$CONFIG_NAME】Unable To Parse, Please Choose One-key Function To Create Config File..."
       uci commit openclash
       sleep 5
@@ -262,10 +262,8 @@ if [ "$create_config" = "0" ] || [ "$servers_if_update" = "1" ] || [ ! -z "$if_g
       exit 0
    else
       if [ -z "$if_game_group" ]; then
-         LOG_OUT "Start Writing【$CONFIG_NAME】Group To Config File..."
          echo "proxy-groups:" >$GROUP_FILE
       else
-         LOG_OUT "Start Writing【$if_game_group】Group To Config File..."
          rm -rf $GROUP_FILE
       fi
       config_load "openclash"

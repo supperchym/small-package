@@ -13,7 +13,7 @@ translate("「全能推送」，英文名「PushBot」，是一款从服务器�
 .. [[</a>]]
 )
 
-m:section(SimpleSection).template  = "pushbot/status"
+m:section(SimpleSection).template  = "pushbot/pushbot_status"
 
 s=m:section(NamedSection,"pushbot","pushbot",translate(""))
 s:tab("basic", translate("基本设置"))
@@ -28,6 +28,26 @@ a=s:taboption("basic", Flag,"pushbot_enable",translate("启用"))
 a.default=0
 a.rmempty = true
 
+--精简模式
+a=s:taboption("basic", Flag,"lite_enable",translate("精简模式"))
+a.default=0
+a.rmempty = true
+
+a= s:taboption("basic", Flag, "content_current_device", "精简当前设备列表")
+a.default = 0
+a.rmempty = true
+a:depends({lite_enable="1"})
+
+a= s:taboption("basic", Flag, "content_nowtime", "精简当前时间")
+a.default = 0
+a.rmempty = true
+a:depends({lite_enable="1"})
+
+a= s:taboption("basic", Flag, "content_content", "只推送标题")
+a.default = 0
+a.rmempty = true
+a:depends({lite_enable="1"})
+
 a=s:taboption("basic", ListValue,"send_we",translate("推送模式"))
 a.default=""
 a.rmempty = true
@@ -37,11 +57,11 @@ a:value("3",translate("飞书"))
 a:value("4",translate("Bark"))
 a:value("2",translate("PushPlus"))
 
-a=s:taboption("basic", Value,"dd_webhook",translate('Webhook'), translate("钉钉机器人 Webhook").."<br>调用代码获取<a href='https://ding-doc.dingtalk.com/' target='_blank'>点击这里</a><br><br>")
+a=s:taboption("basic", Value,"dd_webhook",translate('Webhook'), translate("钉钉机器人 Webhook").."<br>调用代码获取<a href='https://developers.dingtalk.com/document/robots/custom-robot-access' target='_blank'>点击这里</a><br><br>")
 a.rmempty = true
 a:depends("send_we","")
 
-a=s:taboption("basic", Value, "we_webhook", translate("Webhook"),translate("企业微信机器人 Webhook").."<br>调用代码获取<a href='https://www.baidu.com/s?wd=%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%20%E6%B7%BB%E5%8A%A0%E6%9C%BA%E5%99%A8%E4%BA%BA' target='_blank'>点击这里</a><br><br>")
+a=s:taboption("basic", Value, "we_webhook", translate("Webhook"),translate("企业微信机器人 Webhook").."<br>调用代码获取<a href='https://work.weixin.qq.com/api/doc/90000/90136/91770' target='_blank'>点击这里</a><br><br>")
 a.rmempty = true
 a:depends("send_we","1")
 
@@ -149,11 +169,11 @@ for _, iface in ipairs(ifaces) do
 end
 a.description = translate("<br/>一般选择 wan 接口，多拨环境请自行选择")
 
-a= s:taboption("content", Value, "ipv4_URL", "URL 地址")
+a= s:taboption("content", DynamicList, "ipv4_URL", "URL 地址")
 a.rmempty = true
-a.default = "members.3322.org/dyndns/getip"
+
 a:depends({pushbot_ipv4="2"})
-a.description = translate("<br/>会因服务器稳定性、连接频繁等原因导致获取失败<br/>如接口可以正常获取 IP，不推荐使用")
+a.description = translate("<br/>会因服务器稳定性、连接频繁等原因导致获取失败<br/>从以上列表中随机一个地址，留空使用默认地址")
 
 a=s:taboption("content", ListValue,"pushbot_ipv6",translate("ipv6 变动通知"))
 a.rmempty = true
@@ -178,11 +198,11 @@ for _, iface in ipairs(ifaces) do
 end
 a.description = translate("<br/>一般选择 wan 接口，多拨环境请自行选择")
 
-a= s:taboption("content", Value, "ipv6_URL", "URL 地址")
+a= s:taboption("content", DynamicList, "ipv6_URL", "URL 地址")
 a.rmempty = true
-a.default = "v6.ip.zxinc.org/getip"
+
 a:depends({pushbot_ipv6="2"})
-a.description = translate("<br/>会因服务器稳定性、连接频繁等原因导致获取失败<br/>如接口可以正常获取 IP，不推荐使用")
+a.description = translate("<br/>会因服务器稳定性、连接频繁等原因导致获取失败<br/>从以上列表中随机一个地址，留空使用默认地址")
 
 a=s:taboption("content", Flag,"pushbot_up",translate("设备上线通知"))
 a.default=1
@@ -282,7 +302,7 @@ a.datatype=uinteger
 a:depends("send_mode","2")
 a.description = translate("<br/>从 00:00 开始，每 * 小时发送一次")
 
-a= s:taboption("crontab", Value, "send_title", translate("钉钉推送标题"))
+a= s:taboption("crontab", Value, "send_title", translate("推送标题"))
 a:depends("send_mode","1")
 a:depends("send_mode","2")
 a.placeholder = "OpenWrt By tty228 路由状态："

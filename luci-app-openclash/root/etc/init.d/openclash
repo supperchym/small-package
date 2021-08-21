@@ -7,7 +7,7 @@
 START=99
 STOP=15
 
-LOGTIME=$(date "+%Y-%m-%d %H:%M:%S")
+LOGTIME=$(echo $(date "+%Y-%m-%d %H:%M:%S"))
 CLASH="/etc/openclash/clash"
 CLASH_CONFIG="/etc/openclash"
 CRON_FILE="/etc/crontabs/root"
@@ -20,7 +20,7 @@ CONFIG_FILE="/etc/openclash/$(uci -q get openclash.config.config_path |awk -F '/
 RULE_PROVIDER_FILE="/tmp/yaml_rule_provider.yaml"
 DNS_FILE="/tmp/yaml_dns.yaml"
 GAME_RULE_FILE="/tmp/yaml_game_rule.yaml"
-FALLBACK_FILTER_FILE="/tmp/yaml_fallback_filter_file.yaml"
+FALLBACK_FILTER_FILE="/etc/openclash/custom/openclash_custom_fallback_filter.yaml"
 LOCK_FILE=/tmp/lock/openclash.lock
 PROXY_FWMARK="0x162"
 PROXY_ROUTE_TABLE="0x162"
@@ -166,34 +166,16 @@ EOF
    fi
    
    #fallback-filter
-   if [ -n "$(ruby_read "$CONFIG_FILE" "['dns']['fallback']")" ] && [ -z "$(ruby_read "$CONFIG_FILE" "['dns']['fallback-filter']")" ]; then
-cat >> "$2" <<-EOF
-  fallback-filter:
-    geoip: false
-    ipcidr:
-      - 0.0.0.0/8
-      - 10.0.0.0/8
-      - 100.64.0.0/10
-      - 127.0.0.0/8
-      - 169.254.0.0/16
-      - 172.16.0.0/12
-      - 192.0.0.0/24
-      - 192.0.2.0/24
-      - 192.88.99.0/24
-      - 192.168.0.0/16
-      - 198.18.0.0/15
-      - 198.51.100.0/24
-      - 203.0.113.0/24
-      - 224.0.0.0/4
-      - 240.0.0.0/4
-      - 255.255.255.255/32
-    domain:
-      - '+.google.com'
-      - '+.facebook.com'
-      - '+.youtube.com'
-      - '+.githubusercontent.com'
-EOF
-   ruby_merge "$CONFIG_FILE" "['dns']" "$2"
+   if [ "$custom_fallback_filter" = "1" ]; then
+      if [ -z "$(ruby_read "$CONFIG_FILE" "['dns']['fallback']")" ]; then
+         LOG_OUT "Error: Fallback-Filter Need fallback of DNS Been Setted, Ignore..."
+         return
+      fi
+      if [ -z "$(ruby_read "$2" "['fallback-filter']")" ]; then
+         LOG_OUT "Error: Unable To Parse Custom Fallback-Filter File, Ignore..."
+         return
+      fi
+      ruby_merge "$CONFIG_FILE" "['dns']" "$2"
    fi
 }
 
@@ -231,7 +213,7 @@ yml_provider_path()
       end
    end;
    rescue Exception => e
-   puts '${LOGTIME} Edit Provider Path Error: ' + e.message
+   puts '${LOGTIME} Error: Edit Provider Path Error,【' + e.message + '】'
    end
    " 2>/dev/null >> $LOG_FILE
 }
@@ -400,6 +382,27 @@ yml_auth_custom()
    fi
 }
 
+#Tolerance
+yml_tolerance_set()
+{
+if [ -n "$tolerance" ] && [ "$tolerance" -ne 0 ]; then
+ruby -ryaml -E UTF-8 -e "
+	begin
+  	Value = YAML.load_file('${1}');
+  	Value['proxy-groups'].each{
+  		|x|
+			if x['type'] == 'url-test' then
+				x['tolerance']=${2}
+			end
+		};
+		File.open('${1}','w') {|f| YAML.dump(Value, f)};
+	rescue Exception => e
+		puts '${LOGTIME} Error: Set Url-Test Group Tolerance Error,【' + e.message + '】'
+	end
+" 2>/dev/null >> $LOG_FILE
+fi
+}
+
 get_rule_file()
 {
    if [ -z "$1" ]; then
@@ -484,7 +487,7 @@ else
 end;
 File.open('$CONFIG_FILE','w') {|f| YAML.dump(Value, f)}
 rescue Exception => e
-puts '${LOGTIME} Game Rule Merge Error: ' + e.message
+puts '${LOGTIME} Error: Game Rule Merge Error,【' + e.message + '】'
 end
 " 2>/dev/null >> $LOG_FILE
 }
@@ -527,7 +530,7 @@ if File::exist?('/tmp/yaml_provider.yaml') then
 end;
 File.open('$CONFIG_FILE','w') {|f| YAML.dump(Value, f)}
 rescue Exception => e
-puts '${LOGTIME} Game Proxy Merge Error: ' + e.message
+puts '${LOGTIME} Error: Game Proxy Merge Error,【' + e.message + '】'
 end" 2>/dev/null >> $LOG_FILE
 fi
 }
@@ -551,7 +554,7 @@ else
 end;
 File.open('$CONFIG_FILE','w') {|f| YAML.dump(Value, f)}
 rescue Exception => e
-puts '${LOGTIME} Rule Set Add Error: ' + e.message
+puts '${LOGTIME} Error: Rule Set Add Error,【' + e.message + '】'
 end
 " 2>/dev/null >> $LOG_FILE
 }
@@ -702,7 +705,7 @@ yml_custom_rule_provider()
       end;
       File.open('$CONFIG_FILE','w') {|f| YAML.dump(Value, f)}
       rescue Exception => e
-      puts '${LOGTIME} Custom Rule Provider Merge Error: ' + e.message
+      puts '${LOGTIME} Error: Custom Rule Provider Merge Error,【' + e.message + '】'
       end
       " 2>/dev/null >> $LOG_FILE
    fi
@@ -783,7 +786,7 @@ ruby -ryaml -E UTF-8 -e "
 begin
 YAML.load_file('$RAW_CONFIG_FILE');
 rescue Exception => e
-puts '${LOGTIME} Error: Unable To Parse Config File ' + e.message
+puts '${LOGTIME} Error: Unable To Parse Config File,【' + e.message + '】'
 system 'rm -rf ${CONFIG_FILE}'
 end
 " 2>/dev/null >> $LOG_FILE
@@ -804,19 +807,19 @@ ruby -ryaml -E UTF-8 -e "
       if Value.key?('Proxy') then
          Value['proxies'] = Value['Proxy']
          Value.delete('Proxy')
-         puts '${LOGTIME} Warning: Proxy is no longer used. Auto replaced by proxies.'
+         puts '${LOGTIME} Warning: Proxy is no longer used. Auto replaced by proxies'
       elsif Value.key?('Proxy Group') then
          Value['proxy-groups'] = Value['Proxy Group']
          Value.delete('Proxy Group')
-         puts '${LOGTIME} Warning: Proxy Group is no longer used. Auto replaced by proxy-groups.'
+         puts '${LOGTIME} Warning: Proxy Group is no longer used. Auto replaced by proxy-groups'
       elsif Value.key?('Rule') then
          Value['rules'] = Value['Rule']
          Value.delete('Rule')
-         puts '${LOGTIME} Warning: Rule is no longer used. Auto replaced by rules.'
+         puts '${LOGTIME} Warning: Rule is no longer used. Auto replaced by rules'
       elsif Value.key?('rule-provider') then
          Value['rule-providers'] = Value['rule-provider']
          Value.delete('rule-provider')
-         puts '${LOGTIME} Warning: rule-provider is no longer used. Auto replaced by rule-providers.'
+         puts '${LOGTIME} Warning: rule-provider is no longer used. Auto replaced by rule-providers'
       end;
       File.open('$CONFIG_FILE','w') {|f| YAML.dump(Value, f)};
    end;
@@ -1159,7 +1162,7 @@ try_restore_start()
          end;
          File.open('$CONFIG_FILE','w') {|f| YAML.dump(Value_1, f)}
          rescue Exception => e
-         puts '${LOGTIME} Restore Backup Rules Error: ' + e.message
+         puts '${LOGTIME} Error: Restore Backup Rules Error,【' + e.message + '】'
          end
          " 2>/dev/null >> $LOG_FILE
          start_run_core
@@ -1278,20 +1281,6 @@ firewall_redirect_exclude()
 set_firewall()
 {
 
-DNSPORT="$(uci get dhcp.@dnsmasq[0].port 2>/dev/null || echo 53)"
-if [ "$enable_redirect_dns" -eq 1 ] && [ -z "$(iptables -t nat -nL PREROUTING --line-number |grep 'dns_hijack')"]; then
-   iptables -t nat -A PREROUTING -p udp --dport 53 -j REDIRECT --to-ports "$DNSPORT" -m comment --comment dns_hijack
-   iptables -t nat -A PREROUTING -p tcp --dport 53 -j REDIRECT --to-ports "$DNSPORT" -m comment --comment dns_hijack
-fi
-
-if [ "$(iptables -t nat -nL PREROUTING --line-number | grep "redir port $DNSPORT" | wc -l)" -gt 2 ] && [ "$enable_redirect_dns" -eq 1 ]; then
-   LOG_OUT "Found 53 Port Hijacked, Clean Up Firewall Rules..."
-   pre_lines=$(iptables -nvL PREROUTING -t nat |sed 1,2d | sed -n "/redir port $DNSPORT/=" 2>/dev/null |sort -rn)
-   for pre_line in $pre_lines; do
-      iptables -t nat -D PREROUTING "$pre_line" >/dev/null 2>&1
-   done
-fi
-
 if [ -z "$(uci -q get firewall.openclash)" ] || [ -z "$(uci -q get ucitrack.@openclash[-1].init)" ]; then
    uci -q delete ucitrack.@openclash[-1]
    uci -q add ucitrack openclash
@@ -1305,9 +1294,11 @@ if [ -z "$(uci -q get firewall.openclash)" ] || [ -z "$(uci -q get ucitrack.@ope
 fi
           
 if [ "$(uci -q get firewall.@defaults[0].forward)" != "ACCEPT" ]; then
+	 uci -q set openclash.config.firewall_forward_default=$(uci -q get firewall.@defaults[0].forward)
    uci -q set firewall.@defaults[0].forward=ACCEPT
    uci -q commit firewall
-   /etc/init.d/firewall reload >/dev/null 2>&1
+   uci -q commit openclash
+   /etc/init.d/firewall reload >/dev/null 2>&1 &
 fi
 
 mkdir -p /var/etc
@@ -1318,6 +1309,12 @@ EOF
 if [ "$china_ip_route" = "1" ] && [ -f "/etc/openclash/china_ip_route.ipset" ]; then
    ipset -! flush china_ip_route 2>/dev/null
    ipset -! restore </etc/openclash/china_ip_route.ipset 2>/dev/null
+fi
+
+DNSPORT="$(uci -q get dhcp.@dnsmasq[0].port || echo 53)"
+if [ "$enable_redirect_dns" -eq 1 ] && [ -z "$(iptables -t nat -nL PREROUTING --line-number |grep 'dns_hijack')"]; then
+   iptables -t nat -I PREROUTING -p udp --dport 53 -j REDIRECT --to-ports "$DNSPORT" -m comment --comment dns_hijack
+   iptables -t nat -I PREROUTING -p tcp --dport 53 -j REDIRECT --to-ports "$DNSPORT" -m comment --comment dns_hijack
 fi
 
 #lan_ac
@@ -1589,7 +1586,7 @@ if [ -n "$en_mode_tun" ]; then
    fi
    #quic
    if [ "$disable_udp_quic" -eq 1 ]; then
-      iptables -I FORWARD -p udp --dport 443 -j REJECT 
+      iptables -I FORWARD -p udp --dport 443 -j REJECT
    fi
 fi
 
@@ -1727,6 +1724,8 @@ get_config()
    interface_name=$(uci -q get openclash.config.interface_name)
    common_ports=$(uci -q get openclash.config.common_ports)
    dns_port=$(uci -q get openclash.config.dns_port)
+   tolerance=$(uci -q get openclash.config.tolerance)
+   custom_fallback_filter=$(uci -q get openclash.config.custom_fallback_filter)
    _koolshare=$(cat /usr/lib/os-release 2>/dev/null |grep OPENWRT_RELEASE 2>/dev/null |grep -i koolshare 2>/dev/null)
    [ -z "$dns_port" ] && dns_port=7874 && uci -q set openclash.config.dns_port=7874
    uci -q set openclash.config.restricted_mode=0 && uci -q commit openclash
@@ -1762,6 +1761,7 @@ start()
    yml_provider_path "$CONFIG_FILE" "proxy-providers" "proxy_provider"
    yml_provider_path "$CONFIG_FILE" "rule-providers" "rule_provider"
    yml_dns_check "$CONFIG_FILE"  "$FALLBACK_FILTER_FILE"
+   yml_tolerance_set "$CONFIG_FILE" "$tolerance"
 
    LOG_OUT "Step 4: Start Running The Clash Core..."
    start_run_core
@@ -1798,7 +1798,7 @@ start()
       LOG_OUT "Warning: OpenClash Start Successful With Raw Config File, Please Note That It's Restricted Mode Now"
       sleep 5
    fi
-   echo "OpenClash Already Start"
+   echo "OpenClash Already Start!"
    SLOG_CLEAN
    rm -rf /tmp/yaml_*
 }
@@ -1846,8 +1846,17 @@ stop()
       rm -rf /tmp/rule_providers_name
       rm -rf /tmp/openclash_fake_filter.list
       rm -rf /tmp/openclash_servers_fake_filter.conf
+      
+      firewall_forward_default=$(uci -q get openclash.config.firewall_forward_default)
+      if [ -n "$firewall_forward_default" ] && [ "$firewall_forward_default" != "$(uci -q get firewall.@defaults[0].forward)" ]; then
+      	uci -q set firewall.@defaults[0].forward=$firewall_forward_default
+      	uci -q delete openclash.config.firewall_forward_default
+      	uci -q commit firewall
+      	uci -q commit openclash
+      	/etc/init.d/firewall reload >/dev/null 2>&1 &
+      fi
       del_lock
-      LOG_OUT "OpenClash 关闭成功！"
+      LOG_OUT "OpenClash Already Stop!"
       sleep 5
    fi
    
@@ -1856,7 +1865,7 @@ stop()
    uci -q commit openclash
    rm -rf /tmp/yaml_*
    rm -rf $START_LOG
-   echo "OpenClash Already Stop"
+   echo "OpenClash Already Stop!"
 }
 
 
